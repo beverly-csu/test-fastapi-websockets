@@ -15,13 +15,12 @@ async def root():
 @app.websocket('/list')
 async def websocket_list(websocket: WebSocket):
     await websocket.accept()
-    item_list = list()
+    count = 0
     try:
         while True:
             data = await websocket.receive_json()
             if 'item' in data.keys():
-                item_list.append(data['item'])
-                await websocket.send_json({'count': len(item_list), 'item': data['item']})  
+                count += 1
+                await websocket.send_json({'count': count, 'item': data['item']})  
     except WebSocketDisconnect:
-        print(item_list)
-        del item_list
+        print(f"Total messages were sent: {count}")
